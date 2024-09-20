@@ -19,12 +19,6 @@ func main() {
 		log.Fatal("Failed to parse config", err.Error())
 	}
 
-	dir, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Println("Current working directory:", dir)
-
 	if err := godotenv.Load(".env"); err != nil {
 		log.Fatal("Failed to load env file", err)
 	}

@@ -20,7 +20,7 @@ func (h *Handler) Register(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, "failed to create new user")
 		return
 	}
-	c.JSON(http.StatusCreated, map[string]any{
+	c.JSON(http.StatusCreated, gin.H{
 		"id": id,
 	})
 }
@@ -41,7 +41,7 @@ func (h *Handler) Login(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, map[string]any{
+	c.JSON(http.StatusOK, gin.H{
 		"token": token,
 	})
 }

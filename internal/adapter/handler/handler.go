@@ -23,7 +23,7 @@ func (h *Handler) InitRouter() *gin.Engine {
 		auth.POST("/login", h.Login)
 	}
 
-	api := router.Group("/api")
+	api := router.Group("/api", h.AuthMiddleware)
 	{
 		masters := api.Group("/masters")
 		{
