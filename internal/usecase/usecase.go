@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"beauty_salon/internal/adapter/dto"
 	"beauty_salon/internal/adapter/repository"
 	"beauty_salon/internal/domain/entity"
 )
@@ -13,11 +14,11 @@ type Appointment interface {
 }
 
 type Master interface {
-	CreateMaster()              // POST
-	GetAllMasters()             // GET
-	GetMasterById(id int)       // GET
-	DeleteMasterAccount(id int) // DELETE
-	UpdateMasterInfo(id int)    // PUT
+	//CreateMaster()                                // POST
+	GetAllMasters() ([]dto.MasterResponse, error)     // GET
+	GetMasterById(id int) (dto.MasterResponse, error) // GET
+	//DeleteMasterAccount(id int)                   // DELETE
+	//UpdateMasterInfo(id int)                      // PUT
 }
 
 type Service interface {
@@ -42,6 +43,7 @@ type Usecase struct {
 
 func NewUsecase(repo *repository.Repository) *Usecase {
 	return &Usecase{
-		User: NewUserUsecase(repo.User),
+		User:   NewUserUsecase(repo.User),
+		Master: NewMasterUsecase(repo.Master),
 	}
 }

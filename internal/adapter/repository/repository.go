@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"beauty_salon/internal/adapter/dto"
 	"beauty_salon/internal/domain/entity"
 
 	"github.com/jmoiron/sqlx"
@@ -19,6 +20,8 @@ type Appointment interface {
 }
 
 type Master interface {
+	GetAllMasters() ([]dto.MasterResponse, error)
+	GetMasterById(id int) (dto.MasterResponse, error)
 }
 
 type Service interface {
@@ -38,6 +41,7 @@ type Repository struct {
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		User: NewUserRepository(db),
+		User:   NewUserRepository(db),
+		Master: NewMasterRepository(db),
 	}
 }
