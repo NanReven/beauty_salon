@@ -27,14 +27,13 @@ func (h *Handler) InitRouter() *gin.Engine {
 	{
 		masters := api.Group("/masters")
 		{
-			masters.GET("/get_masters", h.GetAllMasters)
+			masters.GET("/", h.GetAllMasters)
 			masters.GET("/:id", h.GetMasterById)
 		}
 
 		services := api.Group("/services")
 		{
-			services.POST("/add_service", h.CreateService)
-			services.GET("/get_services", h.GetAllServices)
+			services.GET("/", h.GetAllServices)
 			services.GET("/:id", h.GetServiceById)
 		}
 

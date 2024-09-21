@@ -22,11 +22,11 @@ type Master interface {
 }
 
 type Service interface {
-	CreateService()        // POST
-	RemoveService(id int)  // DELETE
-	GetAllServices()       // GET
-	GetServiceById(id int) // GET
-	UpdateService(id int)
+	//CreateService()        // POST
+	//RemoveService(id int)  // DELETE
+	GetAllServices() ([]dto.ServiceResponse, error)     // GET
+	GetServiceById(id int) (dto.ServiceResponse, error) // GET
+	//UpdateService(id int)
 }
 
 type User interface {
@@ -43,7 +43,8 @@ type Usecase struct {
 
 func NewUsecase(repo *repository.Repository) *Usecase {
 	return &Usecase{
-		User:   NewUserUsecase(repo.User),
-		Master: NewMasterUsecase(repo.Master),
+		User:    NewUserUsecase(repo.User),
+		Master:  NewMasterUsecase(repo.Master),
+		Service: newServiceUsecase(repo.Service),
 	}
 }

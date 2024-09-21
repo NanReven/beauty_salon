@@ -25,6 +25,8 @@ type Master interface {
 }
 
 type Service interface {
+	GetAllServices() ([]dto.ServiceResponse, error)
+	GetServiceById(id int) (dto.ServiceResponse, error)
 }
 
 type User interface {
@@ -41,7 +43,8 @@ type Repository struct {
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		User:   NewUserRepository(db),
-		Master: NewMasterRepository(db),
+		User:    NewUserRepository(db),
+		Master:  NewMasterRepository(db),
+		Service: NewServiceRepository(db),
 	}
 }
