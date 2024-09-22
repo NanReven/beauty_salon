@@ -9,7 +9,7 @@ type ServiceUsecase struct {
 	repo repository.Service
 }
 
-func newServiceUsecase(repo repository.Service) *ServiceUsecase {
+func NewServiceUsecase(repo repository.Service) *ServiceUsecase {
 	return &ServiceUsecase{repo: repo}
 }
 
