@@ -39,9 +39,9 @@ func (h *Handler) InitRouter() *gin.Engine {
 
 		appointments := api.Group("/appointments")
 		{
-			appointments.POST("/set_appointment", h.SetAppointment)
-			appointments.DELETE("/cancel_appointment", h.CancelAppointment)
-			appointments.GET("/get_appointments", h.GetAllAppointments)
+			appointments.POST("/", h.SetAppointment)
+			appointments.DELETE("/", h.CancelAppointment)
+			appointments.GET("/", h.GetAllAppointments)
 			appointments.GET("/:id", h.GetAppointmentById)
 		}
 
