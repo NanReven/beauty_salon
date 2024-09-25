@@ -8,15 +8,19 @@ import (
 )
 
 const (
-	usersTable        = "users"
-	mastersTable      = "masters"
-	servicesTable     = "services"
-	appointmentsTable = "appointments"
-	categoriesTable   = "categories"
-	positionsTable    = "positions"
+	usersTable               = "users"
+	mastersTable             = "masters"
+	servicesTable            = "services"
+	appointmentsTable        = "appointments"
+	categoriesTable          = "categories"
+	positionsTable           = "positions"
+	appointmentServicesTable = "appointmentServices"
 )
 
 type Appointment interface {
+	CreateAppointment(userId int, appointment *dto.AppointmentInput) (int, error)
+	GetAllAppointments(userId int) ([]dto.AppointmentResponse, error)
+	GetAppointmentById(userId, appointmentId int) (dto.AppointmentResponse, error)
 }
 
 type Master interface {
@@ -43,8 +47,9 @@ type Repository struct {
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		User:    NewUserRepository(db),
-		Master:  NewMasterRepository(db),
-		Service: NewServiceRepository(db),
+		User:        NewUserRepository(db),
+		Master:      NewMasterRepository(db),
+		Service:     NewServiceRepository(db),
+		Appointment: NewAppointmentService(db),
 	}
 }

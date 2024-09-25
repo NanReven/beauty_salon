@@ -7,10 +7,10 @@ import (
 )
 
 type Appointment interface {
-	CreateAppointment() // POST
-	CancelAppointment() // DELETE
-	GetAllAppointments()
-	GetAppointmentById()
+	CreateAppointment(userId int, appointment *dto.AppointmentInput) (int, error) // POST
+	//CancelAppointment() // DELETE
+	GetAllAppointments(userId int) ([]dto.AppointmentResponse, error)
+	GetAppointmentById(userId, appointmentId int) (dto.AppointmentResponse, error)
 }
 
 type Master interface {
@@ -43,8 +43,9 @@ type Usecase struct {
 
 func NewUsecase(repo *repository.Repository) *Usecase {
 	return &Usecase{
-		User:    NewUserUsecase(repo.User),
-		Master:  NewMasterUsecase(repo.Master),
-		Service: newServiceUsecase(repo.Service),
+		User:        NewUserUsecase(repo.User),
+		Master:      NewMasterUsecase(repo.Master),
+		Service:     NewServiceUsecase(repo.Service),
+		Appointment: NewAppointmentUsecase(repo.Appointment),
 	}
 }
