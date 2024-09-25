@@ -40,7 +40,7 @@ func (h *Handler) InitRouter() *gin.Engine {
 		appointments := api.Group("/appointments")
 		{
 			appointments.POST("/", h.SetAppointment)
-			appointments.DELETE("/", h.CancelAppointment)
+			appointments.DELETE("/:id", h.CancelAppointment)
 			appointments.GET("/", h.GetAllAppointments)
 			appointments.GET("/:id", h.GetAppointmentById)
 		}

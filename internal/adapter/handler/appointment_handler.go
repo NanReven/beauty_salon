@@ -29,10 +29,6 @@ func (h *Handler) SetAppointment(c *gin.Context) {
 	c.JSON(http.StatusCreated, appointmentId)
 }
 
-func (h *Handler) CancelAppointment(c *gin.Context) {
-
-}
-
 func (h *Handler) GetAllAppointments(c *gin.Context) {
 	id, err := h.GetUserId(c)
 	if err != nil {
@@ -64,4 +60,25 @@ func (h *Handler) GetAppointmentById(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, appointment)
+}
+
+func (h *Handler) CancelAppointment(c *gin.Context) {
+	userId, err := h.GetUserId(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	appointmentId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	status, err := h.usecase.Appointment.CancelAppointment(userId, appointmentId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status": status,
+	})
 }

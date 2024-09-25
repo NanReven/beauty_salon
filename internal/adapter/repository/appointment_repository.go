@@ -2,6 +2,7 @@ package repository
 
 import (
 	"beauty_salon/internal/adapter/dto"
+	"errors"
 	"fmt"
 	"time"
 
@@ -91,4 +92,13 @@ func (repo *AppointmentRepository) GetAppointmentById(userId, appointmentId int)
 
 	appointment.Services = services
 	return appointment, nil
+}
+
+func (repo *AppointmentRepository) CancelAppointment(userId, appointmentId int) (string, error) {
+	var status string
+	query := fmt.Sprintf("UPDATE %s SET status='cancelled' WHERE id = $1 AND user_id = $2 RETURNING status", appointmentsTable)
+	if err := repo.db.Get(&status, query, appointmentId, userId); err != nil {
+		return "", errors.New("User has no appointment with this id")
+	}
+	return status, nil
 }

@@ -21,6 +21,7 @@ type Appointment interface {
 	CreateAppointment(userId int, appointment *dto.AppointmentInput) (int, error)
 	GetAllAppointments(userId int) ([]dto.AppointmentResponse, error)
 	GetAppointmentById(userId, appointmentId int) (dto.AppointmentResponse, error)
+	CancelAppointment(userId, appointmentId int) (string, error)
 }
 
 type Master interface {

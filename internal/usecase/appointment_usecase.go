@@ -24,3 +24,7 @@ func (uc *AppointmentUsecase) GetAllAppointments(userId int) ([]dto.AppointmentR
 func (uc *AppointmentUsecase) GetAppointmentById(userId, appointmentId int) (dto.AppointmentResponse, error) {
 	return uc.repo.GetAppointmentById(userId, appointmentId)
 }
+
+func (uc *AppointmentUsecase) CancelAppointment(userId, appointmentId int) (string, error) {
+	return uc.repo.CancelAppointment(userId, appointmentId)
+}

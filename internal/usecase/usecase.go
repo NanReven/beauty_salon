@@ -8,7 +8,7 @@ import (
 
 type Appointment interface {
 	CreateAppointment(userId int, appointment *dto.AppointmentInput) (int, error) // POST
-	//CancelAppointment() // DELETE
+	CancelAppointment(userId, appointmentId int) (string, error)                  // DELETE
 	GetAllAppointments(userId int) ([]dto.AppointmentResponse, error)
 	GetAppointmentById(userId, appointmentId int) (dto.AppointmentResponse, error)
 }
