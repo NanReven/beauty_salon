@@ -98,7 +98,7 @@ func (repo *AppointmentRepository) CancelAppointment(userId, appointmentId int) 
 	var status string
 	query := fmt.Sprintf("UPDATE %s SET status='cancelled' WHERE id = $1 AND user_id = $2 RETURNING status", appointmentsTable)
 	if err := repo.db.Get(&status, query, appointmentId, userId); err != nil {
-		return "", errors.New("User has no appointment with this id")
+		return "", errors.New("user has no appointment with this id")
 	}
 	return status, nil
 }
