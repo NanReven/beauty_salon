@@ -2,7 +2,6 @@ package repository
 
 import (
 	"beauty_salon/internal/domain/entity"
-	"fmt"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -17,7 +16,7 @@ func NewFavourRepository(db *sqlx.DB) *FavourRepository {
 
 func (repo *FavourRepository) GetAllFavours() ([]entity.FavourResponse, error) {
 	var favours []entity.FavourResponse
-	query := fmt.Sprintf("SELECT categories.title AS category_title, services.title AS service_title, duration, price FROM %s JOIN %s ON (category_id = categories.id)", servicesTable, categoriesTable)
+	query := "SELECT categories.title AS category_title, services.title AS service_title, duration, price FROM services JOIN categories ON (category_id = categories.id)"
 	if err := repo.db.Select(&favours, query); err != nil {
 		return nil, err
 	}
@@ -26,7 +25,7 @@ func (repo *FavourRepository) GetAllFavours() ([]entity.FavourResponse, error) {
 
 func (repo *FavourRepository) GetFavourById(id int) (entity.FavourResponse, error) {
 	var favour entity.FavourResponse
-	query := fmt.Sprintf("SELECT categories.title AS category_title, services.title AS service_title, duration, price FROM %s JOIN %s ON (category_id = categories.id) WHERE services.id=$1", servicesTable, categoriesTable)
+	query := "SELECT categories.title AS category_title, services.title AS service_title, duration, price FROM services JOIN categories ON (category_id = categories.id) WHERE services.id=$1"
 	if err := repo.db.Get(&favour, query, id); err != nil {
 		return favour, err
 	}

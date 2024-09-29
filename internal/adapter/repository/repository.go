@@ -6,16 +6,6 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-const (
-	usersTable               = "users"
-	mastersTable             = "masters"
-	servicesTable            = "services"
-	appointmentsTable        = "appointments"
-	categoriesTable          = "categories"
-	positionsTable           = "positions"
-	appointmentServicesTable = "appointmentServices"
-)
-
 type Appointment interface {
 	CreateAppointment(userId int, appointment *entity.AppointmentInput) (int, error)
 	GetAllAppointments(userId int) ([]entity.AppointmentResponse, error)
