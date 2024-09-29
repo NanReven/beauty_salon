@@ -1,22 +1,21 @@
 package service
 
 import (
-	"beauty_salon/internal/adapter/dto"
 	"beauty_salon/internal/adapter/repository"
 	"beauty_salon/internal/domain/entity"
 )
 
 type Appointment interface {
-	CreateAppointment(userId int, appointment *dto.AppointmentInput) (int, error) // POST
-	CancelAppointment(userId, appointmentId int) (string, error)                  // DELETE
-	GetAllAppointments(userId int) ([]dto.AppointmentResponse, error)
-	GetAppointmentById(userId, appointmentId int) (dto.AppointmentResponse, error)
+	CreateAppointment(userId int, appointment *entity.AppointmentInput) (int, error) // POST
+	CancelAppointment(userId, appointmentId int) (string, error)                     // DELETE
+	GetAllAppointments(userId int) ([]entity.AppointmentResponse, error)
+	GetAppointmentById(userId, appointmentId int) (entity.AppointmentResponse, error)
 }
 
 type Master interface {
 	//CreateMaster()                                // POST
-	GetAllMasters() ([]dto.MasterResponse, error)     // GET
-	GetMasterById(id int) (dto.MasterResponse, error) // GET
+	GetAllMasters() ([]entity.MasterResponse, error)     // GET
+	GetMasterById(id int) (entity.MasterResponse, error) // GET
 	//DeleteMasterAccount(id int)                   // DELETE
 	//UpdateMasterInfo(id int)                      // PUT
 }
@@ -24,8 +23,8 @@ type Master interface {
 type Favour interface {
 	//CreateService()        // POST
 	//RemoveService(id int)  // DELETE
-	GetAllFavours() ([]dto.FavourResponse, error)     // GET
-	GetFavourById(id int) (dto.FavourResponse, error) // GET
+	GetAllFavours() ([]entity.FavourResponse, error)     // GET
+	GetFavourById(id int) (entity.FavourResponse, error) // GET
 	//UpdateService(id int)
 }
 

@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"beauty_salon/internal/adapter/dto"
+	"beauty_salon/internal/domain/entity"
 	"net/http"
 	"strconv"
 
@@ -15,7 +15,7 @@ func (h *Handler) SetAppointment(c *gin.Context) {
 		return
 	}
 
-	var appointment dto.AppointmentInput
+	var appointment entity.AppointmentInput
 	if err := c.BindJSON(&appointment); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return

@@ -1,8 +1,8 @@
 package service
 
 import (
-	"beauty_salon/internal/adapter/dto"
 	"beauty_salon/internal/adapter/repository"
+	"beauty_salon/internal/domain/entity"
 )
 
 type AppointmentService struct {
@@ -13,15 +13,15 @@ func NewAppointmentService(repo repository.Appointment) *AppointmentService {
 	return &AppointmentService{repo: repo}
 }
 
-func (uc *AppointmentService) CreateAppointment(userId int, appointment *dto.AppointmentInput) (int, error) {
+func (uc *AppointmentService) CreateAppointment(userId int, appointment *entity.AppointmentInput) (int, error) {
 	return uc.repo.CreateAppointment(userId, appointment)
 }
 
-func (uc *AppointmentService) GetAllAppointments(userId int) ([]dto.AppointmentResponse, error) {
+func (uc *AppointmentService) GetAllAppointments(userId int) ([]entity.AppointmentResponse, error) {
 	return uc.repo.GetAllAppointments(userId)
 }
 
-func (uc *AppointmentService) GetAppointmentById(userId, appointmentId int) (dto.AppointmentResponse, error) {
+func (uc *AppointmentService) GetAppointmentById(userId, appointmentId int) (entity.AppointmentResponse, error) {
 	return uc.repo.GetAppointmentById(userId, appointmentId)
 }
 

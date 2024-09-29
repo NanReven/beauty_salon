@@ -1,6 +1,9 @@
 package entity
 
-import "time"
+import (
+	"beauty_salon/internal/domain"
+	"time"
+)
 
 type Category struct {
 	Id          int
@@ -15,4 +18,11 @@ type Service struct {
 	Title      string
 	Duration   time.Duration
 	Price      float64
+}
+
+type FavourResponse struct {
+	Category string                `db:"category_title"`
+	Title    string                `db:"service_title"`
+	Duration domain.CustomDuration `db:"duration"`
+	Price    float64               `db:"price"`
 }

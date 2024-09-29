@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"beauty_salon/internal/adapter/dto"
 	"beauty_salon/internal/domain/entity"
 
 	"github.com/jmoiron/sqlx"
@@ -18,20 +17,20 @@ const (
 )
 
 type Appointment interface {
-	CreateAppointment(userId int, appointment *dto.AppointmentInput) (int, error)
-	GetAllAppointments(userId int) ([]dto.AppointmentResponse, error)
-	GetAppointmentById(userId, appointmentId int) (dto.AppointmentResponse, error)
+	CreateAppointment(userId int, appointment *entity.AppointmentInput) (int, error)
+	GetAllAppointments(userId int) ([]entity.AppointmentResponse, error)
+	GetAppointmentById(userId, appointmentId int) (entity.AppointmentResponse, error)
 	CancelAppointment(userId, appointmentId int) (string, error)
 }
 
 type Master interface {
-	GetAllMasters() ([]dto.MasterResponse, error)
-	GetMasterById(id int) (dto.MasterResponse, error)
+	GetAllMasters() ([]entity.MasterResponse, error)
+	GetMasterById(id int) (entity.MasterResponse, error)
 }
 
 type Favour interface {
-	GetAllFavours() ([]dto.FavourResponse, error)
-	GetFavourById(id int) (dto.FavourResponse, error)
+	GetAllFavours() ([]entity.FavourResponse, error)
+	GetFavourById(id int) (entity.FavourResponse, error)
 }
 
 type User interface {

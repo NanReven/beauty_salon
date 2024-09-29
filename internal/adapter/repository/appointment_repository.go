@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"beauty_salon/internal/adapter/dto"
+	"beauty_salon/internal/domain/entity"
 	"errors"
 	"fmt"
 	"time"
@@ -17,7 +17,7 @@ func NewAppointmentRepository(db *sqlx.DB) *AppointmentRepository {
 	return &AppointmentRepository{db: db}
 }
 
-func (repo *AppointmentRepository) CreateAppointment(userId int, appointment *dto.AppointmentInput) (int, error) {
+func (repo *AppointmentRepository) CreateAppointment(userId int, appointment *entity.AppointmentInput) (int, error) {
 	appointmentEnd := appointment.AppointmentStart.Time
 	var appointmentId int
 	var totalSum float64
@@ -59,14 +59,14 @@ func (repo *AppointmentRepository) CreateAppointment(userId int, appointment *dt
 	return appointmentId, tx.Commit()
 }
 
-func (repo *AppointmentRepository) GetAllAppointments(userId int) ([]dto.AppointmentResponse, error) {
-	var appointments []dto.AppointmentResponse
+func (repo *AppointmentRepository) GetAllAppointments(userId int) ([]entity.AppointmentResponse, error) {
+	var appointments []entity.AppointmentResponse
 	query := fmt.Sprintf("SELECT appointments.id, appointment_start, appointment_end, CONCAT(first_name, ' ', second_name) AS master, status, comment, total_sum FROM %s JOIN %s ON (master_id = masters.id) JOIN %s ON (masters.user_id = users.id) WHERE appointments.user_id = $1", appointmentsTable, mastersTable, usersTable)
 	if err := repo.db.Select(&appointments, query, userId); err != nil {
 		return appointments, err
 	}
 	for appointmentIndex, appointment := range appointments {
-		var services []dto.FavourResponse
+		var services []entity.FavourResponse
 		servicesQuery := fmt.Sprintf("SELECT categories.title AS category_title, services.title AS service_title, duration, price FROM %s JOIN %s ON (category_id = categories.id) WHERE services.id IN (SELECT service_id FROM %s WHERE appointment_id = $1)", servicesTable, categoriesTable, appointmentServicesTable)
 		if err := repo.db.Select(&services, servicesQuery, appointment.Id); err != nil {
 			return appointments, err
@@ -76,9 +76,9 @@ func (repo *AppointmentRepository) GetAllAppointments(userId int) ([]dto.Appoint
 	return appointments, nil
 }
 
-func (repo *AppointmentRepository) GetAppointmentById(userId, appointmentId int) (dto.AppointmentResponse, error) {
-	var appointment dto.AppointmentResponse
-	var services []dto.FavourResponse
+func (repo *AppointmentRepository) GetAppointmentById(userId, appointmentId int) (entity.AppointmentResponse, error) {
+	var appointment entity.AppointmentResponse
+	var services []entity.FavourResponse
 	query := fmt.Sprintf("SELECT appointments.id, appointment_start, appointment_end, CONCAT(first_name, ' ', second_name) AS master, status, comment, total_sum FROM %s JOIN %s ON (master_id = masters.id) JOIN %s ON (masters.user_id = users.id) WHERE appointments.user_id = $1 AND appointments.id = $2", appointmentsTable, mastersTable, usersTable)
 
 	if err := repo.db.Get(&appointment, query, userId, appointmentId); err != nil {
