@@ -29,9 +29,9 @@ type Master interface {
 	GetMasterById(id int) (dto.MasterResponse, error)
 }
 
-type Service interface {
-	GetAllServices() ([]dto.ServiceResponse, error)
-	GetServiceById(id int) (dto.ServiceResponse, error)
+type Favour interface {
+	GetAllFavours() ([]dto.FavourResponse, error)
+	GetFavourById(id int) (dto.FavourResponse, error)
 }
 
 type User interface {
@@ -42,7 +42,7 @@ type User interface {
 type Repository struct {
 	Appointment
 	Master
-	Service
+	Favour
 	User
 }
 
@@ -50,7 +50,7 @@ func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		User:        NewUserRepository(db),
 		Master:      NewMasterRepository(db),
-		Service:     NewServiceRepository(db),
-		Appointment: NewAppointmentService(db),
+		Favour:      NewFavourRepository(db),
+		Appointment: NewAppointmentRepository(db),
 	}
 }

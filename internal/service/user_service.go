@@ -1,4 +1,4 @@
-package usecase
+package service
 
 import (
 	"beauty_salon/internal/adapter/repository"
@@ -18,21 +18,21 @@ type UserClaims struct {
 	jwt.RegisteredClaims
 }
 
-type UserUsecase struct {
+type UserService struct {
 	repo repository.User
 }
 
-func NewUserUsecase(repo repository.User) *UserUsecase {
-	return &UserUsecase{repo: repo}
+func NewUserService(repo repository.User) *UserService {
+	return &UserService{repo: repo}
 }
 
-func (uc *UserUsecase) Register(input *entity.User) (int, error) {
+func (serv *UserService) Register(input *entity.User) (int, error) {
 	input.Password = generatePasswordHash(input.Password)
-	return uc.repo.CreateUser(input)
+	return serv.repo.CreateUser(input)
 }
 
-func (uc *UserUsecase) GenerateToken(email, password string) (string, error) {
-	user, err := uc.repo.GetUser(email, generatePasswordHash(password))
+func (serv *UserService) GenerateToken(email, password string) (string, error) {
+	user, err := serv.repo.GetUser(email, generatePasswordHash(password))
 	if err != nil {
 		return "", err
 	}
@@ -47,7 +47,7 @@ func (uc *UserUsecase) GenerateToken(email, password string) (string, error) {
 	return token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 }
 
-func (uc *Usecase) ParseToken(token string) (int, bool, error) {
+func (serv *UserService) ParseToken(token string) (int, bool, error) {
 	authToken, err := jwt.ParseWithClaims(token, &UserClaims{}, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")

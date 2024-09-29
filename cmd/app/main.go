@@ -5,7 +5,7 @@ import (
 	"beauty_salon/internal/adapter/repository"
 	"beauty_salon/internal/infrastracture/db"
 	"beauty_salon/internal/infrastracture/server"
-	"beauty_salon/internal/usecase"
+	"beauty_salon/internal/service"
 	"log"
 	"os"
 
@@ -37,8 +37,8 @@ func main() {
 	}
 
 	repository := repository.NewRepository(db)
-	usecase := usecase.NewUsecase(repository)
-	handler := handler.NewHandler(usecase)
+	service := service.NewService(repository)
+	handler := handler.NewHandler(service)
 
 	server := new(server.Server)
 

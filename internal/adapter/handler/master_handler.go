@@ -12,7 +12,7 @@ func (h *Handler) CreateMaster(c *gin.Context) {
 }
 
 func (h *Handler) GetAllMasters(c *gin.Context) {
-	masters, err := h.usecase.Master.GetAllMasters()
+	masters, err := h.service.Master.GetAllMasters()
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, "failed to get masters list")
 		return
@@ -25,7 +25,7 @@ func (h *Handler) GetMasterById(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, "invalid master id")
 		return
 	}
-	master, err := h.usecase.Master.GetMasterById(id)
+	master, err := h.service.Master.GetMasterById(id)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return

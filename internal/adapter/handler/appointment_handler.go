@@ -21,7 +21,7 @@ func (h *Handler) SetAppointment(c *gin.Context) {
 		return
 	}
 
-	appointmentId, err := h.usecase.Appointment.CreateAppointment(userId, &appointment)
+	appointmentId, err := h.service.Appointment.CreateAppointment(userId, &appointment)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -35,7 +35,7 @@ func (h *Handler) GetAllAppointments(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	appointments, err := h.usecase.Appointment.GetAllAppointments(id)
+	appointments, err := h.service.Appointment.GetAllAppointments(id)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -54,7 +54,7 @@ func (h *Handler) GetAppointmentById(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	appointment, err := h.usecase.Appointment.GetAppointmentById(userId, appointmentId)
+	appointment, err := h.service.Appointment.GetAppointmentById(userId, appointmentId)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -73,7 +73,7 @@ func (h *Handler) CancelAppointment(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	status, err := h.usecase.Appointment.CancelAppointment(userId, appointmentId)
+	status, err := h.service.Appointment.CancelAppointment(userId, appointmentId)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

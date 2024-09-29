@@ -7,6 +7,6 @@ type AppointmentResponse struct {
 	Master           string     `db:"master"`
 	Status           string     `db:"status"`
 	Comment          string     `db:"comment"`
-	Services         []ServiceResponse
+	Services         []FavourResponse
 	TotalSum         float64 `db:"total_sum"`
 }

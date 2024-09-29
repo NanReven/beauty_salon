@@ -13,7 +13,7 @@ type AppointmentRepository struct {
 	db *sqlx.DB
 }
 
-func NewAppointmentService(db *sqlx.DB) *AppointmentRepository {
+func NewAppointmentRepository(db *sqlx.DB) *AppointmentRepository {
 	return &AppointmentRepository{db: db}
 }
 
@@ -66,7 +66,7 @@ func (repo *AppointmentRepository) GetAllAppointments(userId int) ([]dto.Appoint
 		return appointments, err
 	}
 	for appointmentIndex, appointment := range appointments {
-		var services []dto.ServiceResponse
+		var services []dto.FavourResponse
 		servicesQuery := fmt.Sprintf("SELECT categories.title AS category_title, services.title AS service_title, duration, price FROM %s JOIN %s ON (category_id = categories.id) WHERE services.id IN (SELECT service_id FROM %s WHERE appointment_id = $1)", servicesTable, categoriesTable, appointmentServicesTable)
 		if err := repo.db.Select(&services, servicesQuery, appointment.Id); err != nil {
 			return appointments, err
@@ -78,7 +78,7 @@ func (repo *AppointmentRepository) GetAllAppointments(userId int) ([]dto.Appoint
 
 func (repo *AppointmentRepository) GetAppointmentById(userId, appointmentId int) (dto.AppointmentResponse, error) {
 	var appointment dto.AppointmentResponse
-	var services []dto.ServiceResponse
+	var services []dto.FavourResponse
 	query := fmt.Sprintf("SELECT appointments.id, appointment_start, appointment_end, CONCAT(first_name, ' ', second_name) AS master, status, comment, total_sum FROM %s JOIN %s ON (master_id = masters.id) JOIN %s ON (masters.user_id = users.id) WHERE appointments.user_id = $1 AND appointments.id = $2", appointmentsTable, mastersTable, usersTable)
 
 	if err := repo.db.Get(&appointment, query, userId, appointmentId); err != nil {

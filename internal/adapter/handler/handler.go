@@ -1,17 +1,17 @@
 package handler
 
 import (
-	"beauty_salon/internal/usecase"
+	"beauty_salon/internal/service"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
-	usecase *usecase.Usecase
+	service *service.Service
 }
 
-func NewHandler(usecase *usecase.Usecase) *Handler {
-	return &Handler{usecase: usecase}
+func NewHandler(service *service.Service) *Handler {
+	return &Handler{service: service}
 }
 
 func (h *Handler) InitRouter() *gin.Engine {
@@ -31,10 +31,10 @@ func (h *Handler) InitRouter() *gin.Engine {
 			masters.GET("/:id", h.GetMasterById)
 		}
 
-		services := api.Group("/services")
+		Favours := api.Group("/favours")
 		{
-			services.GET("", h.GetAllServices)
-			services.GET("/:id", h.GetServiceById)
+			Favours.GET("", h.GetAllFavours)
+			Favours.GET("/:id", h.GetFavourById)
 		}
 
 		appointments := api.Group("/appointments")
@@ -50,9 +50,9 @@ func (h *Handler) InitRouter() *gin.Engine {
 			admin.POST("/masters", h.CreateMaster)
 			admin.PUT("/masters/:id", h.UpdateMasterInfo)
 			admin.DELETE("masters/:id", h.DeleteMasterAccount)
-			admin.POST("/services", h.CreateService)
-			admin.PUT("/services/:id", h.UpdateService)
-			admin.DELETE("/services/:id", h.RemoveService)
+			admin.POST("/favours", h.CreateFavour)
+			admin.PUT("/favours/:id", h.UpdateFavour)
+			admin.DELETE("/favours/:id", h.RemoveFavour)
 		}
 	}
 

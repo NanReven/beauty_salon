@@ -1,4 +1,4 @@
-package usecase
+package service
 
 import (
 	"beauty_salon/internal/adapter/dto"
@@ -21,31 +21,32 @@ type Master interface {
 	//UpdateMasterInfo(id int)                      // PUT
 }
 
-type Service interface {
+type Favour interface {
 	//CreateService()        // POST
 	//RemoveService(id int)  // DELETE
-	GetAllServices() ([]dto.ServiceResponse, error)     // GET
-	GetServiceById(id int) (dto.ServiceResponse, error) // GET
+	GetAllFavours() ([]dto.FavourResponse, error)     // GET
+	GetFavourById(id int) (dto.FavourResponse, error) // GET
 	//UpdateService(id int)
 }
 
 type User interface {
 	Register(input *entity.User) (int, error)             // POST
 	GenerateToken(email, password string) (string, error) // POST
+	ParseToken(token string) (int, bool, error)
 }
 
-type Usecase struct {
+type Service struct {
 	Appointment
 	Master
-	Service
+	Favour
 	User
 }
 
-func NewUsecase(repo *repository.Repository) *Usecase {
-	return &Usecase{
-		User:        NewUserUsecase(repo.User),
-		Master:      NewMasterUsecase(repo.Master),
-		Service:     NewServiceUsecase(repo.Service),
-		Appointment: NewAppointmentUsecase(repo.Appointment),
+func NewService(repo *repository.Repository) *Service {
+	return &Service{
+		User:        NewUserService(repo.User),
+		Master:      NewMasterService(repo.Master),
+		Favour:      NewFavourService(repo.Favour),
+		Appointment: NewAppointmentService(repo.Appointment),
 	}
 }

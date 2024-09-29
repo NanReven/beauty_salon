@@ -19,7 +19,7 @@ func (h *Handler) AuthMiddleware(c *gin.Context) {
 		newErrorResponse(c, http.StatusUnauthorized, "invalid auth header")
 		return
 	}
-	userId, isMaster, err := h.usecase.ParseToken(tokenData[1])
+	userId, isMaster, err := h.service.ParseToken(tokenData[1])
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return

@@ -15,7 +15,7 @@ func (h *Handler) Register(c *gin.Context) {
 		return
 	}
 
-	id, err := h.usecase.User.Register(&input)
+	id, err := h.service.User.Register(&input)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, "failed to create new user")
 		return
@@ -36,7 +36,7 @@ func (h *Handler) Login(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	token, err := h.usecase.User.GenerateToken(input.Email, input.Password)
+	token, err := h.service.User.GenerateToken(input.Email, input.Password)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
