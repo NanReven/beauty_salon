@@ -2,14 +2,16 @@ package repository
 
 import (
 	"beauty_salon/internal/domain/entity"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 )
 
 type Appointment interface {
-	CreateAppointment(userId int, appointment *entity.AppointmentInput) (int, error)
+	CreateAppointment(userId int, appointment *entity.AppointmentInput, appointmentEnd time.Time, totalSum float64) (int, error)
 	GetAllAppointments(userId int) ([]entity.AppointmentResponse, error)
 	GetAppointmentById(userId, appointmentId int) (entity.AppointmentResponse, error)
+	GetFavoursByAppointmentId(appointmentId int) ([]entity.FavourResponse, error)
 	CancelAppointment(userId, appointmentId int) (string, error)
 }
 
