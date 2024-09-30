@@ -13,8 +13,8 @@ import (
 )
 
 type UserClaims struct {
-	UserId   int  `json:"id"`
-	IsMaster bool `json:"is_master"`
+	UserId int    `json:"id"`
+	Role   string `json:"role"`
 	jwt.RegisteredClaims
 }
 
@@ -37,8 +37,8 @@ func (serv *UserService) GenerateToken(email, password string) (string, error) {
 		return "", err
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &UserClaims{
-		UserId:   user.Id,
-		IsMaster: user.IsMaster,
+		UserId: user.Id,
+		Role:   user.Role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(12 * time.Hour)),
@@ -47,7 +47,7 @@ func (serv *UserService) GenerateToken(email, password string) (string, error) {
 	return token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 }
 
-func (serv *UserService) ParseToken(token string) (int, bool, error) {
+func (serv *UserService) ParseToken(token string) (int, string, error) {
 	authToken, err := jwt.ParseWithClaims(token, &UserClaims{}, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
@@ -55,14 +55,14 @@ func (serv *UserService) ParseToken(token string) (int, bool, error) {
 		return []byte(os.Getenv("JWT_SECRET")), nil
 	})
 	if err != nil {
-		return 0, false, err
+		return 0, "", err
 	}
 
 	claims, ok := authToken.Claims.(*UserClaims)
 	if !ok {
-		return 0, false, errors.New("invalid token claims")
+		return 0, "", errors.New("invalid token claims")
 	}
-	return claims.UserId, claims.IsMaster, nil
+	return claims.UserId, claims.Role, nil
 }
 
 func generatePasswordHash(password string) string {

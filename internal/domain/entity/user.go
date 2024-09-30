@@ -6,5 +6,5 @@ type User struct {
 	SecondName string `json:"second_name" binding:"required" db:"second_name"`
 	Email      string `json:"email" binding:"required" db:"email"`
 	Password   string `json:"password" binding:"required" db:"password_hash"`
-	IsMaster   bool   `json:"is_master" db:"is_master"`
+	Role       string `json:"role" db:"role"`
 }

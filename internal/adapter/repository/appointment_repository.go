@@ -16,6 +16,13 @@ func NewAppointmentRepository(db *sqlx.DB) *AppointmentRepository {
 	return &AppointmentRepository{db: db}
 }
 
+const (
+	pendingStatus   = "pending"
+	acceptedStatus  = "accepted"
+	completedStatus = "completed"
+	cancelledStatus = "cancelled"
+)
+
 func (repo *AppointmentRepository) CreateAppointment(userId int, appointment *entity.AppointmentInput, appointmentEnd time.Time, totalSum float64) (int, error) {
 	var appointmentId int
 	tx, err := repo.db.Begin()
@@ -23,7 +30,7 @@ func (repo *AppointmentRepository) CreateAppointment(userId int, appointment *en
 		return 0, err
 	}
 	query := "INSERT INTO appointments (appointment_start, appointment_end, user_id, master_id, status, comment, total_sum) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id"
-	row := tx.QueryRow(query, appointment.AppointmentStart.Time, appointmentEnd, userId, appointment.MasterId, "pending", appointment.Comment, totalSum)
+	row := tx.QueryRow(query, appointment.AppointmentStart.Time, appointmentEnd, userId, appointment.MasterId, pendingStatus, appointment.Comment, totalSum)
 	if err := row.Scan(&appointmentId); err != nil {
 		tx.Rollback()
 		return 0, err
@@ -68,8 +75,8 @@ func (repo *AppointmentRepository) GetFavoursByAppointmentId(appointmentId int) 
 
 func (repo *AppointmentRepository) CancelAppointment(userId, appointmentId int) (string, error) {
 	var status string
-	query := "UPDATE appointments SET status='cancelled' WHERE id = $1 AND user_id = $2 RETURNING status"
-	if err := repo.db.Get(&status, query, appointmentId, userId); err != nil {
+	query := "UPDATE appointments SET status=$1 WHERE id = $2 AND user_id = $3 RETURNING status"
+	if err := repo.db.Get(&status, query, cancelledStatus, appointmentId, userId); err != nil {
 		return "", errors.New("user has no appointment with this id")
 	}
 	return status, nil

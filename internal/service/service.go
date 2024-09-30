@@ -31,7 +31,7 @@ type Favour interface {
 type User interface {
 	Register(input *entity.User) (int, error)             // POST
 	GenerateToken(email, password string) (string, error) // POST
-	ParseToken(token string) (int, bool, error)
+	ParseToken(token string) (int, string, error)
 }
 
 type Service struct {
