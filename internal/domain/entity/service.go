@@ -2,7 +2,6 @@ package entity
 
 import (
 	"beauty_salon/internal/domain"
-	"time"
 )
 
 type Category struct {
@@ -12,12 +11,12 @@ type Category struct {
 	Slug        string
 }
 
-type Service struct {
+type Favour struct {
 	Id         int
-	CategoryId int
-	Title      string
-	Duration   time.Duration
-	Price      float64
+	CategoryId int                   `json:"category_id" binding:"required"`
+	Title      string                `json:"title" binding:"required"`
+	Duration   domain.CustomDuration `json:"duration" binding:"required"`
+	Price      float64               `json:"price" binding:"required"`
 }
 
 type FavourResponse struct {

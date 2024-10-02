@@ -40,3 +40,27 @@ func (repo *MasterRepository) GetMasterName(userId int) (string, error) {
 	}
 	return masterName, nil
 }
+
+func (repo *MasterRepository) UpdateUserId(masterId, userId int, slugified string) error {
+	query := "UPDATE masters SET user_id=$1, slug=$2 WHERE id=$3"
+	if _, err := repo.db.Exec(query, userId, slugified, masterId); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *MasterRepository) UpdatePositionId(masterId, positionId int) error {
+	query := "UPDATE masters SET position_id=$1 WHERE id=$2"
+	if _, err := repo.db.Exec(query, positionId, masterId); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *MasterRepository) UpdateBio(masterId int, bio string) error {
+	query := "UPDATE masters SET bio=$1 WHERE id=$2"
+	if _, err := repo.db.Exec(query, bio, masterId); err != nil {
+		return err
+	}
+	return nil
+}

@@ -19,6 +19,9 @@ type Master interface {
 	GetAllMasters() ([]entity.MasterResponse, error)
 	GetMasterById(id int) (entity.MasterResponse, error)
 	GetMasterName(userId int) (string, error)
+	UpdateUserId(masterId, userId int, slugified string) error
+	UpdatePositionId(masterId, positionId int) error
+	UpdateBio(masterId int, bio string) error
 }
 
 type Favour interface {
@@ -35,7 +38,7 @@ type Admin interface {
 	CreateMaster(input *entity.Master, slug string) (int, error)
 	//DeleteMaster(id int)
 	//UpdateMasterInfo(id int)
-	//CreateService()
+	CreateFavour(input *entity.Favour) (int, error)
 	//RemoveService(id int)
 	//UpdateService(id int)
 }
