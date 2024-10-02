@@ -18,6 +18,7 @@ type Appointment interface {
 type Master interface {
 	GetAllMasters() ([]entity.MasterResponse, error)
 	GetMasterById(id int) (entity.MasterResponse, error)
+	GetMasterName(userId int) (string, error)
 }
 
 type Favour interface {
@@ -30,11 +31,21 @@ type User interface {
 	GetUser(email, password string) (entity.User, error)
 }
 
+type Admin interface {
+	CreateMaster(input *entity.Master, slug string) (int, error)
+	//DeleteMaster(id int)
+	//UpdateMasterInfo(id int)
+	//CreateService()
+	//RemoveService(id int)
+	//UpdateService(id int)
+}
+
 type Repository struct {
 	Appointment
 	Master
 	Favour
 	User
+	Admin
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
@@ -43,5 +54,6 @@ func NewRepository(db *sqlx.DB) *Repository {
 		Master:      NewMasterRepository(db),
 		Favour:      NewFavourRepository(db),
 		Appointment: NewAppointmentRepository(db),
+		Admin:       NewAdminRepository(db),
 	}
 }

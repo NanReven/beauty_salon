@@ -19,13 +19,13 @@ func (h *Handler) AuthMiddleware(c *gin.Context) {
 		newErrorResponse(c, http.StatusUnauthorized, "invalid auth header")
 		return
 	}
-	userId, isMaster, err := h.service.ParseToken(tokenData[1])
+	userId, role, err := h.service.ParseToken(tokenData[1])
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
 	}
 	c.Set("userId", userId)
-	c.Set("isMaster", isMaster)
+	c.Set("role", role)
 }
 
 func (h *Handler) GetUserId(c *gin.Context) (int, error) {
@@ -40,4 +40,26 @@ func (h *Handler) GetUserId(c *gin.Context) (int, error) {
 		return 0, errors.New("user id is of invalid type")
 	}
 	return userId, nil
+}
+
+func (h *Handler) GetUserRole(c *gin.Context) (string, error) {
+	role, ok := c.Get("role")
+	if !ok {
+		newErrorResponse(c, http.StatusUnauthorized, "user role is not set")
+		return "", errors.New("user role is not set")
+	}
+	userRole, ok := role.(string)
+	if !ok {
+		newErrorResponse(c, http.StatusInternalServerError, "user role is of invalid type")
+		return "", errors.New("user role is of invalid type")
+	}
+	return userRole, nil
+}
+
+func (h *Handler) CheckAdminRole(c *gin.Context) {
+	role, err := h.GetUserRole(c)
+	if err != nil || role != "admin" {
+		newErrorResponse(c, http.StatusForbidden, "only for admins")
+		return
+	}
 }

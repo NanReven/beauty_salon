@@ -45,7 +45,7 @@ func (h *Handler) InitRouter() *gin.Engine {
 			appointments.GET("/:id", h.GetAppointmentById)
 		}
 
-		admin := api.Group("/admin")
+		admin := api.Group("/admin", h.CheckAdminRole)
 		{
 			admin.POST("/masters", h.CreateMaster)
 			admin.PUT("/masters/:id", h.UpdateMasterInfo)

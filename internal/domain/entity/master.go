@@ -7,9 +7,9 @@ type Position struct {
 
 type Master struct {
 	Id         int
-	UserId     int
-	PositionId int
-	Bio        string
+	UserId     int    `json:"user_id" binding:"required"`
+	PositionId int    `json:"position_id" binding:"required"`
+	Bio        string `json:"bio" binding:"required"`
 	Slug       string
 }
 

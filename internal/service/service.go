@@ -6,32 +6,36 @@ import (
 )
 
 type Appointment interface {
-	CreateAppointment(userId int, appointment *entity.AppointmentInput) (int, error) // POST
-	CancelAppointment(userId, appointmentId int) (string, error)                     // DELETE
+	CreateAppointment(userId int, appointment *entity.AppointmentInput) (int, error)
+	CancelAppointment(userId, appointmentId int) (string, error)
 	GetAllAppointments(userId int) ([]entity.AppointmentResponse, error)
 	GetAppointmentById(userId, appointmentId int) (entity.AppointmentResponse, error)
 }
 
 type Master interface {
-	//CreateMaster()                                // POST
-	GetAllMasters() ([]entity.MasterResponse, error)     // GET
-	GetMasterById(id int) (entity.MasterResponse, error) // GET
-	//DeleteMasterAccount(id int)                   // DELETE
-	//UpdateMasterInfo(id int)                      // PUT
+	GetAllMasters() ([]entity.MasterResponse, error)
+	GetMasterById(id int) (entity.MasterResponse, error)
+	GetMasterName(userId int) (string, error)
 }
 
 type Favour interface {
-	//CreateService()        // POST
-	//RemoveService(id int)  // DELETE
-	GetAllFavours() ([]entity.FavourResponse, error)     // GET
-	GetFavourById(id int) (entity.FavourResponse, error) // GET
-	//UpdateService(id int)
+	GetAllFavours() ([]entity.FavourResponse, error)
+	GetFavourById(id int) (entity.FavourResponse, error)
 }
 
 type User interface {
-	Register(input *entity.User) (int, error)             // POST
-	GenerateToken(email, password string) (string, error) // POST
+	Register(input *entity.User) (int, error)
+	GenerateToken(email, password string) (string, error)
 	ParseToken(token string) (int, string, error)
+}
+
+type Admin interface {
+	CreateMaster(input *entity.Master) (int, error)
+	//DeleteMaster(id int)
+	//UpdateMasterInfo(id int)
+	//CreateService()
+	//RemoveService(id int)
+	//UpdateService(id int)
 }
 
 type Service struct {
@@ -39,6 +43,7 @@ type Service struct {
 	Master
 	Favour
 	User
+	Admin
 }
 
 func NewService(repo *repository.Repository) *Service {
@@ -47,5 +52,6 @@ func NewService(repo *repository.Repository) *Service {
 		Master:      NewMasterService(repo.Master),
 		Favour:      NewFavourService(repo.Favour),
 		Appointment: NewAppointmentService(repo.Appointment, repo.Favour),
+		Admin:       NewAdminService(repo.Admin, repo.Master),
 	}
 }
