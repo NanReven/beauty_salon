@@ -22,7 +22,6 @@ type MasterResponse struct {
 }
 
 type MasterUpdate struct {
-	MasterId   int    `json:"master_id" binding:"required"`
 	UserId     int    `json:"user_id"`
 	PositionId int    `json:"position_id"`
 	Bio        string `json:"bio"`

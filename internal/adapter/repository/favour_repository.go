@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"beauty_salon/internal/domain"
 	"beauty_salon/internal/domain/entity"
 
 	"github.com/jmoiron/sqlx"
@@ -30,4 +31,36 @@ func (repo *FavourRepository) GetFavourById(id int) (entity.FavourResponse, erro
 		return favour, err
 	}
 	return favour, nil
+}
+
+func (repo *FavourRepository) UpdateCategoryId(favourId, categoryId int) error {
+	query := "UPDATE services SET category_id=$1 WHERE id=$2"
+	if _, err := repo.db.Exec(query, categoryId, favourId); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *FavourRepository) UpdateFavourTitle(favourId int, title string) error {
+	query := "UPDATE services SET title=$1 WHERE id=$2"
+	if _, err := repo.db.Exec(query, title, favourId); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *FavourRepository) UpdateFavourDuration(favourId int, duration domain.CustomDuration) error {
+	query := "UPDATE services SET duration=$1 WHERE id=$2"
+	if _, err := repo.db.Exec(query, duration, favourId); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (repo *FavourRepository) UpdateFavourPrice(favourId int, price float64) error {
+	query := "UPDATE services SET price=$1 WHERE id=$2"
+	if _, err := repo.db.Exec(query, price, favourId); err != nil {
+		return err
+	}
+	return nil
 }

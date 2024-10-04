@@ -25,3 +25,10 @@ type FavourResponse struct {
 	Duration domain.CustomDuration `db:"duration"`
 	Price    float64               `db:"price"`
 }
+
+type FavourUpdate struct {
+	CategoryId int                   `json:"category_id"`
+	Title      string                `json:"title"`
+	Duration   domain.CustomDuration `json:"duration"`
+	Price      float64               `json:"price"`
+}

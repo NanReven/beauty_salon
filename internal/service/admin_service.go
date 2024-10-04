@@ -11,10 +11,11 @@ import (
 type AdminService struct {
 	adminRepo  repository.Admin
 	masterRepo repository.Master
+	favourRepo repository.Favour
 }
 
-func NewAdminService(adminRepo repository.Admin, masterRepo repository.Master) *AdminService {
-	return &AdminService{adminRepo: adminRepo, masterRepo: masterRepo}
+func NewAdminService(adminRepo repository.Admin, masterRepo repository.Master, favourRepo repository.Favour) *AdminService {
+	return &AdminService{adminRepo: adminRepo, masterRepo: masterRepo, favourRepo: favourRepo}
 }
 
 func (serv *AdminService) CreateMaster(input *entity.Master) (int, error) {
@@ -36,8 +37,8 @@ func (serv *AdminService) CreateFavour(input *entity.Favour) (int, error) {
 	return serv.adminRepo.CreateFavour(input)
 }
 
-func (serv *AdminService) UpdateMasterInfo(input *entity.MasterUpdate) error {
-	if input.MasterId < 0 || input.UserId < 0 {
+func (serv *AdminService) UpdateMasterInfo(input *entity.MasterUpdate, masterId int) error {
+	if masterId < 0 || input.UserId < 0 {
 		return errors.New("invalid ids")
 	}
 	if input.UserId != 0 {
@@ -46,19 +47,53 @@ func (serv *AdminService) UpdateMasterInfo(input *entity.MasterUpdate) error {
 			return err
 		}
 		slugified := slug.Make(masterName)
-		if err := serv.masterRepo.UpdateUserId(input.MasterId, input.UserId, slugified); err != nil {
+		if err := serv.masterRepo.UpdateUserId(masterId, input.UserId, slugified); err != nil {
 			return err
 		}
 	}
 	if input.PositionId != 0 {
-		if err := serv.masterRepo.UpdatePositionId(input.MasterId, input.PositionId); err != nil {
+		if err := serv.masterRepo.UpdatePositionId(masterId, input.PositionId); err != nil {
 			return err
 		}
 	}
 	if input.Bio != "" {
-		if err := serv.masterRepo.UpdateBio(input.MasterId, input.Bio); err != nil {
+		if err := serv.masterRepo.UpdateBio(masterId, input.Bio); err != nil {
 			return err
 		}
 	}
+	return nil
+}
+
+func (serv *AdminService) UpdateFavourInfo(input *entity.FavourUpdate, favourId int) error {
+	if input.CategoryId < 0 {
+		return errors.New("invalid category id")
+	} else if input.Price < 0 {
+		return errors.New("invalid price")
+	}
+
+	if input.CategoryId != 0 {
+		if err := serv.favourRepo.UpdateCategoryId(favourId, input.CategoryId); err != nil {
+			return err
+		}
+	}
+
+	if input.Title != "" {
+		if err := serv.favourRepo.UpdateFavourTitle(favourId, input.Title); err != nil {
+			return err
+		}
+	}
+
+	if !input.Duration.IsZero() {
+		if err := serv.favourRepo.UpdateFavourDuration(favourId, input.Duration); err != nil {
+			return err
+		}
+	}
+
+	if input.Price != 0 {
+		if err := serv.favourRepo.UpdateFavourPrice(favourId, input.Price); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }

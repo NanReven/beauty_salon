@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"beauty_salon/internal/domain"
 	"beauty_salon/internal/domain/entity"
 	"time"
 
@@ -27,6 +28,10 @@ type Master interface {
 type Favour interface {
 	GetAllFavours() ([]entity.FavourResponse, error)
 	GetFavourById(id int) (entity.FavourResponse, error)
+	UpdateCategoryId(favourId, categoryId int) error
+	UpdateFavourTitle(favourId int, title string) error
+	UpdateFavourDuration(favourId int, duration domain.CustomDuration) error
+	UpdateFavourPrice(favourId int, price float64) error
 }
 
 type User interface {
