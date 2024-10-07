@@ -15,7 +15,6 @@ type Appointment interface {
 type Master interface {
 	GetAllMasters() ([]entity.MasterResponse, error)
 	GetMasterById(id int) (entity.MasterResponse, error)
-	//GetMasterName(userId int) (string, error) ???
 }
 
 type Favour interface {
@@ -31,10 +30,8 @@ type User interface {
 
 type Admin interface {
 	CreateMaster(input *entity.Master) (int, error)
-	//DeleteMaster(id int)
 	UpdateMasterInfo(input *entity.MasterUpdate, masterId int) error
 	CreateFavour(input *entity.Favour) (int, error)
-	//RemoveService(id int)
 	UpdateFavourInfo(input *entity.FavourUpdate, favourId int) error
 }
 

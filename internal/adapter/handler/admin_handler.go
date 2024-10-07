@@ -57,10 +57,6 @@ func (h *Handler) CreateFavour(c *gin.Context) {
 	c.JSON(http.StatusCreated, id)
 }
 
-func (h *Handler) RemoveFavour(c *gin.Context) {
-
-}
-
 func (h *Handler) UpdateFavour(c *gin.Context) {
 	favourId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

@@ -16,11 +16,11 @@ import (
 
 func main() {
 	if err := initConfig(); err != nil {
-		log.Fatal("Failed to parse config", err.Error())
+		log.Fatal("failed to parse config", err.Error())
 	}
 
 	if err := godotenv.Load(".env"); err != nil {
-		log.Fatal("Failed to load env file", err)
+		log.Fatal("failed to load env file", err)
 	}
 
 	db, err := db.NewPostgresDB(&db.Config{

@@ -49,10 +49,8 @@ func (h *Handler) InitRouter() *gin.Engine {
 		{
 			admin.POST("/masters", h.CreateMaster)
 			admin.PUT("/masters/:id", h.UpdateMasterInfo)
-			admin.DELETE("masters/:id", h.DeleteMasterAccount)
 			admin.POST("/favours", h.CreateFavour)
 			admin.PUT("/favours/:id", h.UpdateFavour)
-			admin.DELETE("/favours/:id", h.RemoveFavour)
 		}
 	}
 

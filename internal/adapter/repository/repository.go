@@ -41,11 +41,7 @@ type User interface {
 
 type Admin interface {
 	CreateMaster(input *entity.Master, slug string) (int, error)
-	//DeleteMaster(id int)
-	//UpdateMasterInfo(id int)
 	CreateFavour(input *entity.Favour) (int, error)
-	//RemoveService(id int)
-	//UpdateService(id int)
 }
 
 type Repository struct {
