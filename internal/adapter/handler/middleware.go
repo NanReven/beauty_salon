@@ -8,10 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var (
+	ErrUserIDNotFound    = errors.New("user id not found")
+	ErrUserIDInvalidType = errors.New("user id is invalid")
+)
+
 func (h *Handler) AuthMiddleware(c *gin.Context) {
 	token := c.GetHeader("Authorization")
 	if token == "" {
-		newErrorResponse(c, http.StatusUnauthorized, "user is not authorized")
+		newErrorResponse(c, http.StatusUnauthorized, "user is unauthorized")
 		return
 	}
 	tokenData := strings.Split(token, " ")
@@ -28,18 +33,20 @@ func (h *Handler) AuthMiddleware(c *gin.Context) {
 	c.Set("role", role)
 }
 
-func (h *Handler) GetUserId(c *gin.Context) (int, error) {
+func (h *Handler) GetUserId(c *gin.Context) (int, bool) {
 	id, ok := c.Get("userId")
 	if !ok {
-		newErrorResponse(c, http.StatusInternalServerError, "user id not found")
-		return 0, errors.New("user id not found")
+		newErrorResponse(c, http.StatusUnauthorized, "user is unauthorized")
+		return 0, false
 	}
+
 	userId, ok := id.(int)
 	if !ok {
-		newErrorResponse(c, http.StatusInternalServerError, "user id is of invalid type")
-		return 0, errors.New("user id is of invalid type")
+		newErrorResponse(c, http.StatusBadRequest, "invalid user id")
+		return 0, false
 	}
-	return userId, nil
+
+	return userId, true
 }
 
 func (h *Handler) GetUserRole(c *gin.Context) (string, error) {
@@ -50,8 +57,8 @@ func (h *Handler) GetUserRole(c *gin.Context) (string, error) {
 	}
 	userRole, ok := role.(string)
 	if !ok {
-		newErrorResponse(c, http.StatusInternalServerError, "user role is of invalid type")
-		return "", errors.New("user role is of invalid type")
+		newErrorResponse(c, http.StatusInternalServerError, "user role is invalid")
+		return "", errors.New("user role is invalid")
 	}
 	return userRole, nil
 }

@@ -2,13 +2,13 @@ package entity
 
 import (
 	"beauty_salon/internal/domain"
+	"errors"
 	"time"
 )
 
-const (
-	StatusPending   = "pending"
-	StatusConfirmed = "confirmed"
-	StatusRejected  = "rejected"
+var (
+	ErrAppointmentNotFound  = errors.New("appointment not found")
+	ErrAppointmentCancelled = errors.New("appointment already cancelled")
 )
 
 type Appointment struct {

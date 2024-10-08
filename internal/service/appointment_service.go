@@ -37,6 +37,7 @@ func (uc *AppointmentService) GetAllAppointments(userId int) ([]entity.Appointme
 	if err != nil {
 		return appointments, err
 	}
+
 	for i := 0; i < len(appointments); i++ {
 		services, err := uc.repo.GetFavoursByAppointmentId(appointments[i].Id)
 		if err != nil {
@@ -63,5 +64,12 @@ func (uc *AppointmentService) GetAppointmentById(userId, appointmentId int) (ent
 }
 
 func (uc *AppointmentService) CancelAppointment(userId, appointmentId int) (string, error) {
+	appointment, err := uc.repo.GetAppointmentById(userId, appointmentId)
+	if err != nil {
+		return "", err
+	} else if appointment.Status == "cancelled" {
+		return "", entity.ErrAppointmentCancelled
+	}
+
 	return uc.repo.CancelAppointment(userId, appointmentId)
 }

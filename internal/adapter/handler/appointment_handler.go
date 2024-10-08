@@ -2,6 +2,7 @@ package handler
 
 import (
 	"beauty_salon/internal/domain/entity"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -9,9 +10,8 @@ import (
 )
 
 func (h *Handler) SetAppointment(c *gin.Context) {
-	userId, err := h.GetUserId(c)
-	if err != nil {
-		newErrorResponse(c, http.StatusUnauthorized, err.Error())
+	userId, ok := h.GetUserId(c)
+	if !ok {
 		return
 	}
 
@@ -30,12 +30,12 @@ func (h *Handler) SetAppointment(c *gin.Context) {
 }
 
 func (h *Handler) GetAllAppointments(c *gin.Context) {
-	id, err := h.GetUserId(c)
-	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+	userId, ok := h.GetUserId(c)
+	if !ok {
 		return
 	}
-	appointments, err := h.service.Appointment.GetAllAppointments(id)
+
+	appointments, err := h.service.Appointment.GetAllAppointments(userId)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -44,38 +44,50 @@ func (h *Handler) GetAllAppointments(c *gin.Context) {
 }
 
 func (h *Handler) GetAppointmentById(c *gin.Context) {
-	userId, err := h.GetUserId(c)
-	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+	userId, ok := h.GetUserId(c)
+	if !ok {
 		return
 	}
+
 	appointmentId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
+
 	appointment, err := h.service.Appointment.GetAppointmentById(userId, appointmentId)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		if errors.Is(err, entity.ErrAppointmentNotFound) {
+			newErrorResponse(c, http.StatusNotFound, err.Error())
+		} else {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		}
 		return
 	}
 	c.JSON(http.StatusOK, appointment)
 }
 
 func (h *Handler) CancelAppointment(c *gin.Context) {
-	userId, err := h.GetUserId(c)
-	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+	userId, ok := h.GetUserId(c)
+	if !ok {
 		return
 	}
+
 	appointmentId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
+
 	status, err := h.service.Appointment.CancelAppointment(userId, appointmentId)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		if errors.Is(err, entity.ErrAppointmentNotFound) {
+			newErrorResponse(c, http.StatusNotFound, err.Error())
+		} else if errors.Is(err, entity.ErrAppointmentCancelled) {
+			newErrorResponse(c, http.StatusConflict, err.Error())
+		} else {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		}
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
