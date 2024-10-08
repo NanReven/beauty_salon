@@ -2,6 +2,11 @@ package entity
 
 import (
 	"beauty_salon/internal/domain"
+	"errors"
+)
+
+var (
+	ErrFavourNotFound = errors.New("favour not found")
 )
 
 type Category struct {

@@ -19,16 +19,19 @@ func (h *Handler) AuthMiddleware(c *gin.Context) {
 		newErrorResponse(c, http.StatusUnauthorized, "user is unauthorized")
 		return
 	}
+
 	tokenData := strings.Split(token, " ")
 	if len(tokenData) != 2 {
 		newErrorResponse(c, http.StatusUnauthorized, "invalid auth header")
 		return
 	}
+
 	userId, role, err := h.service.ParseToken(tokenData[1])
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
 	}
+
 	c.Set("userId", userId)
 	c.Set("role", role)
 }

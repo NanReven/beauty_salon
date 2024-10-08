@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"beauty_salon/internal/domain/entity"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -19,12 +21,17 @@ func (h *Handler) GetAllFavours(c *gin.Context) {
 func (h *Handler) GetFavourById(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, "invalid id")
 		return
 	}
+
 	favour, err := h.service.Favour.GetFavourById(id)
 	if err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		if errors.Is(err, entity.ErrFavourNotFound) {
+			newErrorResponse(c, http.StatusNotFound, err.Error())
+		} else {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		}
 		return
 	}
 	c.JSON(http.StatusOK, favour)

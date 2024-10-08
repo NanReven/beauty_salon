@@ -2,6 +2,7 @@ package handler
 
 import (
 	"beauty_salon/internal/domain/entity"
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -38,7 +39,11 @@ func (h *Handler) Login(c *gin.Context) {
 	}
 	token, err := h.service.User.GenerateToken(input.Email, input.Password)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		if errors.Is(err, entity.ErrUserNotFound) {
+			newErrorResponse(c, http.StatusNotFound, err.Error())
+		} else {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		}
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{

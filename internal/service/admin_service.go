@@ -19,9 +19,6 @@ func NewAdminService(adminRepo repository.Admin, masterRepo repository.Master, f
 }
 
 func (serv *AdminService) CreateMaster(input *entity.Master) (int, error) {
-	if input.UserId < 0 || input.PositionId < 0 {
-		return 0, errors.New("wrong ids")
-	}
 	masterName, err := serv.masterRepo.GetMasterName(input.UserId)
 	if err != nil {
 		return 0, err
@@ -38,9 +35,6 @@ func (serv *AdminService) CreateFavour(input *entity.Favour) (int, error) {
 }
 
 func (serv *AdminService) UpdateMasterInfo(input *entity.MasterUpdate, masterId int) error {
-	if masterId < 0 || input.UserId < 0 {
-		return errors.New("invalid ids")
-	}
 	if input.UserId != 0 {
 		masterName, err := serv.masterRepo.GetMasterName(input.UserId)
 		if err != nil {
@@ -51,11 +45,13 @@ func (serv *AdminService) UpdateMasterInfo(input *entity.MasterUpdate, masterId 
 			return err
 		}
 	}
+
 	if input.PositionId != 0 {
 		if err := serv.masterRepo.UpdatePositionId(masterId, input.PositionId); err != nil {
 			return err
 		}
 	}
+
 	if input.Bio != "" {
 		if err := serv.masterRepo.UpdateBio(masterId, input.Bio); err != nil {
 			return err
@@ -65,12 +61,6 @@ func (serv *AdminService) UpdateMasterInfo(input *entity.MasterUpdate, masterId 
 }
 
 func (serv *AdminService) UpdateFavourInfo(input *entity.FavourUpdate, favourId int) error {
-	if input.CategoryId < 0 {
-		return errors.New("invalid category id")
-	} else if input.Price < 0 {
-		return errors.New("invalid price")
-	}
-
 	if input.CategoryId != 0 {
 		if err := serv.favourRepo.UpdateCategoryId(favourId, input.CategoryId); err != nil {
 			return err

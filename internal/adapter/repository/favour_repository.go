@@ -3,6 +3,7 @@ package repository
 import (
 	"beauty_salon/internal/domain"
 	"beauty_salon/internal/domain/entity"
+	"database/sql"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
@@ -28,7 +29,11 @@ func (repo *FavourRepository) GetAllFavours() ([]entity.FavourResponse, error) {
 func (repo *FavourRepository) GetFavourById(id int) (entity.FavourResponse, error) {
 	var favour entity.FavourResponse
 	query := "SELECT categories.title AS category_title, services.title AS service_title, duration, price FROM services JOIN categories ON (category_id = categories.id) WHERE services.id=$1"
-	if err := repo.db.Get(&favour, query, id); err != nil {
+	err := repo.db.Get(&favour, query, id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return favour, entity.ErrFavourNotFound
+		}
 		return favour, fmt.Errorf("failed to get favour with id %d: %w", id, err)
 	}
 	return favour, nil

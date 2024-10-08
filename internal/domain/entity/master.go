@@ -1,9 +1,15 @@
 package entity
 
+import "errors"
+
 type Position struct {
 	Id    int
 	Title string
 }
+
+var (
+	ErrMasterNotFound = errors.New("favour not found")
+)
 
 type Master struct {
 	Id         int

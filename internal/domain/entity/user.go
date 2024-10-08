@@ -1,5 +1,11 @@
 package entity
 
+import "errors"
+
+var (
+	ErrUserNotFound = errors.New("user not found")
+)
+
 type User struct {
 	Id         int
 	FirstName  string `json:"first_name" binding:"required" db:"first_name"`

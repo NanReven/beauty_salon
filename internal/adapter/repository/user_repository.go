@@ -2,6 +2,7 @@ package repository
 
 import (
 	"beauty_salon/internal/domain/entity"
+	"database/sql"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
@@ -30,6 +31,9 @@ func (repo *UserRepository) GetUser(email, password string) (entity.User, error)
 	query := "SELECT * FROM users WHERE email=$1 AND password_hash=$2"
 	err := repo.db.Get(&user, query, email, password)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return user, entity.ErrUserNotFound
+		}
 		return user, fmt.Errorf("failed to get user with email %s: %w", email, err)
 	}
 	return user, nil
