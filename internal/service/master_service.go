@@ -18,9 +18,15 @@ func (uc *MasterService) GetAllMasters() ([]entity.MasterResponse, error) {
 }
 
 func (uc *MasterService) GetMasterById(id int) (entity.MasterResponse, error) {
+	if id <= 0 {
+		return entity.MasterResponse{}, entity.ErrInvalidMasterInput
+	}
 	return uc.repo.GetMasterById(id)
 }
 
 func (uc *MasterService) GetMasterName(userId int) (string, error) {
+	if userId <= 0 {
+		return "", entity.ErrInvalidMasterInput
+	}
 	return uc.repo.GetMasterName(userId)
 }

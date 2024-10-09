@@ -23,15 +23,14 @@ func (h *Handler) GetMasterById(c *gin.Context) {
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, "invalid master id")
 		return
-	} else if id < 0 {
-		newErrorResponse(c, http.StatusBadRequest, "master id must be greater than zero")
-		return
 	}
 
 	master, err := h.service.Master.GetMasterById(id)
 	if err != nil {
 		if errors.Is(err, entity.ErrMasterNotFound) {
 			newErrorResponse(c, http.StatusNotFound, err.Error())
+		} else if errors.Is(err, entity.ErrInvalidMasterInput) {
+			newErrorResponse(c, http.StatusBadRequest, "invalid master id")
 		} else {
 			newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		}

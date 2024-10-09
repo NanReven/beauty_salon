@@ -18,5 +18,8 @@ func (uc *FavourService) GetAllFavours() ([]entity.FavourResponse, error) {
 }
 
 func (uc *FavourService) GetFavourById(id int) (entity.FavourResponse, error) {
+	if id <= 0 {
+		return entity.FavourResponse{}, entity.ErrInvalidFavourInput
+	}
 	return uc.repo.GetFavourById(id)
 }

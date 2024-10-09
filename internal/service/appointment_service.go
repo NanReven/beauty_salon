@@ -16,6 +16,10 @@ func NewAppointmentService(repo repository.Appointment, favourRepo repository.Fa
 }
 
 func (uc *AppointmentService) CreateAppointment(userId int, appointment *entity.AppointmentInput) (int, error) {
+	if appointment.MasterId <= 0 || len(appointment.Services) == 0 || appointment.AppointmentStart.IsZero() {
+		return 0, entity.ErrInvalidAppointmentInput
+	}
+
 	appointmentEnd := appointment.AppointmentStart.Time
 	var totalSum float64
 
@@ -49,6 +53,10 @@ func (uc *AppointmentService) GetAllAppointments(userId int) ([]entity.Appointme
 }
 
 func (uc *AppointmentService) GetAppointmentById(userId, appointmentId int) (entity.AppointmentResponse, error) {
+	if appointmentId <= 0 {
+		return entity.AppointmentResponse{}, entity.ErrInvalidAppointmentInput
+	}
+
 	appointment, err := uc.repo.GetAppointmentById(userId, appointmentId)
 	if err != nil {
 		return appointment, err
@@ -64,6 +72,10 @@ func (uc *AppointmentService) GetAppointmentById(userId, appointmentId int) (ent
 }
 
 func (uc *AppointmentService) CancelAppointment(userId, appointmentId int) (string, error) {
+	if appointmentId <= 0 {
+		return "", entity.ErrInvalidAppointmentInput
+	}
+
 	appointment, err := uc.repo.GetAppointmentById(userId, appointmentId)
 	if err != nil {
 		return "", err

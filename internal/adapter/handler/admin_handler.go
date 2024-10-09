@@ -16,17 +16,13 @@ func (h *Handler) CreateMaster(c *gin.Context) {
 		return
 	}
 
-	if input.UserId < 0 {
-		newErrorResponse(c, http.StatusBadRequest, "user id must be greater than zero")
-		return
-	} else if input.PositionId < 0 {
-		newErrorResponse(c, http.StatusBadRequest, "position id must be greater than zero")
-		return
-	}
-
 	id, err := h.service.Admin.CreateMaster(&input)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		if errors.Is(err, entity.ErrInvalidMasterInput) {
+			newErrorResponse(c, http.StatusBadRequest, "invalid user id or position id")
+		} else {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		}
 		return
 	}
 	c.JSON(http.StatusCreated, id)
@@ -45,19 +41,14 @@ func (h *Handler) UpdateMasterInfo(c *gin.Context) {
 		return
 	}
 
-	if input.UserId < 0 {
-		newErrorResponse(c, http.StatusBadRequest, "user id must be greater than zero")
-		return
-	} else if input.PositionId < 0 {
-		newErrorResponse(c, http.StatusBadRequest, "position id must be greater than zero")
-		return
-	}
-
 	if err := h.service.UpdateMasterInfo(&input, masterId); err != nil {
 		if errors.Is(err, entity.ErrMasterNotFound) {
 			newErrorResponse(c, http.StatusNotFound, err.Error())
+		} else if errors.Is(err, entity.ErrInvalidMasterInput) {
+			newErrorResponse(c, http.StatusBadRequest, "invalid user id or position id")
+		} else {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		}
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 	c.JSON(http.StatusOK, "updated")
@@ -71,7 +62,11 @@ func (h *Handler) CreateFavour(c *gin.Context) {
 	}
 	id, err := h.service.Admin.CreateFavour(&input)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		if errors.Is(err, entity.ErrInvalidFavourInput) {
+			newErrorResponse(c, http.StatusBadRequest, "invalid price or duration")
+		} else {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		}
 		return
 	}
 	c.JSON(http.StatusCreated, id)
@@ -90,16 +85,14 @@ func (h *Handler) UpdateFavour(c *gin.Context) {
 		return
 	}
 
-	if input.CategoryId < 0 {
-		newErrorResponse(c, http.StatusBadRequest, "category id must be greater than zero")
-		return
-	} else if input.Price < 0 {
-		newErrorResponse(c, http.StatusBadRequest, "favour price must be greater than zero")
-		return
-	}
-
 	if err := h.service.UpdateFavourInfo(&input, favourId); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		if errors.Is(err, entity.ErrFavourNotFound) {
+			newErrorResponse(c, http.StatusNotFound, err.Error())
+		} else if errors.Is(err, entity.ErrInvalidFavourInput) {
+			newErrorResponse(c, http.StatusBadRequest, "invalid price or duration")
+		} else {
+			newErrorResponse(c, http.StatusBadRequest, err.Error())
+		}
 		return
 	}
 	c.JSON(http.StatusOK, "updated")

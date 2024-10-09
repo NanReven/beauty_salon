@@ -23,7 +23,13 @@ func (h *Handler) SetAppointment(c *gin.Context) {
 
 	appointmentId, err := h.service.Appointment.CreateAppointment(userId, &appointment)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		if errors.Is(err, entity.ErrInvalidAppointmentInput) {
+			newErrorResponse(c, http.StatusBadRequest, "invalid request data")
+		} else if errors.Is(err, entity.ErrFavourNotFound) {
+			newErrorResponse(c, http.StatusNotFound, err.Error())
+		} else {
+			newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		}
 		return
 	}
 	c.JSON(http.StatusCreated, appointmentId)
@@ -59,6 +65,8 @@ func (h *Handler) GetAppointmentById(c *gin.Context) {
 	if err != nil {
 		if errors.Is(err, entity.ErrAppointmentNotFound) {
 			newErrorResponse(c, http.StatusNotFound, err.Error())
+		} else if errors.Is(err, entity.ErrInvalidAppointmentInput) {
+			newErrorResponse(c, http.StatusBadRequest, "invalid appointment id")
 		} else {
 			newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		}
@@ -85,6 +93,8 @@ func (h *Handler) CancelAppointment(c *gin.Context) {
 			newErrorResponse(c, http.StatusNotFound, err.Error())
 		} else if errors.Is(err, entity.ErrAppointmentCancelled) {
 			newErrorResponse(c, http.StatusConflict, err.Error())
+		} else if errors.Is(err, entity.ErrInvalidAppointmentInput) {
+			newErrorResponse(c, http.StatusBadRequest, "invalid appointment id")
 		} else {
 			newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		}

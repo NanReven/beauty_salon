@@ -29,6 +29,8 @@ func (h *Handler) GetFavourById(c *gin.Context) {
 	if err != nil {
 		if errors.Is(err, entity.ErrFavourNotFound) {
 			newErrorResponse(c, http.StatusNotFound, err.Error())
+		} else if errors.Is(err, entity.ErrInvalidFavourInput) {
+			newErrorResponse(c, http.StatusBadRequest, "invalid favour id")
 		} else {
 			newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		}

@@ -14,3 +14,8 @@ type User struct {
 	Password   string `json:"password" binding:"required" db:"password_hash"`
 	Role       string `json:"role" db:"role"`
 }
+
+type LoginInput struct {
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}

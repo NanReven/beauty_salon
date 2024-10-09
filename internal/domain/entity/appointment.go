@@ -7,8 +7,9 @@ import (
 )
 
 var (
-	ErrAppointmentNotFound  = errors.New("appointment not found")
-	ErrAppointmentCancelled = errors.New("appointment already cancelled")
+	ErrAppointmentNotFound     = errors.New("appointment not found")
+	ErrAppointmentCancelled    = errors.New("appointment already cancelled")
+	ErrInvalidAppointmentInput = errors.New("invalid appointmen input")
 )
 
 type Appointment struct {

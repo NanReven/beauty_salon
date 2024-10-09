@@ -10,7 +10,6 @@ import (
 
 func (h *Handler) Register(c *gin.Context) {
 	var input entity.User
-
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -21,22 +20,19 @@ func (h *Handler) Register(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, "failed to create new user")
 		return
 	}
+
 	c.JSON(http.StatusCreated, gin.H{
 		"id": id,
 	})
 }
 
-type LoginInput struct {
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
-
 func (h *Handler) Login(c *gin.Context) {
-	var input LoginInput
+	var input entity.LoginInput
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
+
 	token, err := h.service.User.GenerateToken(input.Email, input.Password)
 	if err != nil {
 		if errors.Is(err, entity.ErrUserNotFound) {
@@ -46,6 +42,7 @@ func (h *Handler) Login(c *gin.Context) {
 		}
 		return
 	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"token": token,
 	})

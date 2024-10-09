@@ -6,7 +6,8 @@ import (
 )
 
 var (
-	ErrFavourNotFound = errors.New("favour not found")
+	ErrFavourNotFound     = errors.New("favour not found")
+	ErrInvalidFavourInput = errors.New("invalid input")
 )
 
 type Category struct {

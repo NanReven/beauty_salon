@@ -8,7 +8,8 @@ type Position struct {
 }
 
 var (
-	ErrMasterNotFound = errors.New("favour not found")
+	ErrMasterNotFound     = errors.New("master not found")
+	ErrInvalidMasterInput = errors.New("invalid request data")
 )
 
 type Master struct {
