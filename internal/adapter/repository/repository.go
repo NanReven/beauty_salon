@@ -14,6 +14,7 @@ type Appointment interface {
 	GetAppointmentById(userId, appointmentId int) (entity.AppointmentResponse, error)
 	GetFavoursByAppointmentId(appointmentId int) ([]entity.FavourResponse, error)
 	CancelAppointment(userId, appointmentId int) (string, error)
+	GetAcceptedAppointments(appointmentDate time.Time, masterId int) ([]entity.AppointmentTime, error)
 }
 
 type Master interface {

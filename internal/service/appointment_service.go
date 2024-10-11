@@ -3,6 +3,7 @@ package service
 import (
 	"beauty_salon/internal/adapter/repository"
 	"beauty_salon/internal/domain/entity"
+	"log"
 	"time"
 )
 
@@ -31,6 +32,10 @@ func (uc *AppointmentService) CreateAppointment(userId int, appointment *entity.
 		duration := time.Duration(favour.Duration.Hour()*3600+favour.Duration.Minute()*60) * time.Second
 		appointmentEnd = appointmentEnd.Add(duration)
 		totalSum += favour.Price
+	}
+
+	if !uc.CheckMasterAvailability(appointment.AppointmentStart.Time, appointmentEnd, appointment.MasterId) {
+		return 0, entity.ErrMasterIsUnavailable
 	}
 
 	return uc.repo.CreateAppointment(userId, appointment, appointmentEnd, totalSum)
@@ -84,4 +89,21 @@ func (uc *AppointmentService) CancelAppointment(userId, appointmentId int) (stri
 	}
 
 	return uc.repo.CancelAppointment(userId, appointmentId)
+}
+
+func (uc *AppointmentService) CheckMasterAvailability(appointmentStart time.Time, appointmentEnd time.Time, masterId int) bool {
+	acceptedAppointments, err := uc.repo.GetAcceptedAppointments(appointmentStart, masterId)
+	if err != nil {
+		return false
+	}
+
+	log.Println("Input appointment:", appointmentStart, ":", appointmentEnd)
+	for _, appointment := range acceptedAppointments {
+		log.Println("Accepted appointment:", appointment.AppointmentStart, ":", appointment.AppointmentEnd)
+		if appointmentStart.Before(appointment.AppointmentEnd.Time) && appointmentEnd.After(appointment.AppointmentStart.Time) {
+			log.Println("Conflict found with appointment:", appointment.AppointmentStart, "-", appointment.AppointmentEnd)
+			return false
+		}
+	}
+	return true
 }

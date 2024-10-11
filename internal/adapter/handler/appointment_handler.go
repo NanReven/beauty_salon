@@ -27,6 +27,8 @@ func (h *Handler) SetAppointment(c *gin.Context) {
 			newErrorResponse(c, http.StatusBadRequest, "invalid request data")
 		} else if errors.Is(err, entity.ErrFavourNotFound) {
 			newErrorResponse(c, http.StatusNotFound, err.Error())
+		} else if errors.Is(err, entity.ErrMasterIsUnavailable) {
+			newErrorResponse(c, http.StatusConflict, "master has accepted appointment")
 		} else {
 			newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		}

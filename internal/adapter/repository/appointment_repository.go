@@ -90,3 +90,12 @@ func (repo *AppointmentRepository) CancelAppointment(userId, appointmentId int) 
 	}
 	return status, nil
 }
+
+func (repo *AppointmentRepository) GetAcceptedAppointments(appointmentDate time.Time, masterId int) ([]entity.AppointmentTime, error) {
+	var appointments []entity.AppointmentTime
+	query := "SELECT appointment_start, appointment_end FROM appointments WHERE master_id=$1 AND status=$2 AND appointment_start::date=$3::date"
+	if err := repo.db.Select(&appointments, query, masterId, acceptedStatus, appointmentDate); err != nil {
+		return appointments, fmt.Errorf("failed to get accepted appointments: %w", err)
+	}
+	return appointments, nil
+}

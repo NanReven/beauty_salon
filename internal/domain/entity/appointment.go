@@ -10,6 +10,7 @@ var (
 	ErrAppointmentNotFound     = errors.New("appointment not found")
 	ErrAppointmentCancelled    = errors.New("appointment already cancelled")
 	ErrInvalidAppointmentInput = errors.New("invalid appointmen input")
+	ErrMasterIsUnavailable     = errors.New("master is unavailable")
 )
 
 type Appointment struct {
@@ -44,4 +45,9 @@ type AppointmentResponse struct {
 	Comment          string            `db:"comment"`
 	Services         []FavourResponse
 	TotalSum         float64 `db:"total_sum"`
+}
+
+type AppointmentTime struct {
+	AppointmentStart domain.CustomTime `db:"appointment_start"`
+	AppointmentEnd   domain.CustomTime `db:"appointment_end"`
 }
