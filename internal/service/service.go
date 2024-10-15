@@ -48,7 +48,7 @@ func NewService(repo *repository.Repository) *Service {
 		User:        NewUserService(repo.User),
 		Master:      NewMasterService(repo.Master),
 		Favour:      NewFavourService(repo.Favour),
-		Appointment: NewAppointmentService(repo.Appointment, repo.Favour),
+		Appointment: NewAppointmentService(repo.Appointment, repo.Favour, repo.Master),
 		Admin:       NewAdminService(repo.Admin, repo.Master, repo.Favour),
 	}
 }

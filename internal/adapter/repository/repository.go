@@ -24,6 +24,7 @@ type Master interface {
 	UpdateUserId(masterId, userId int, slugified string) error
 	UpdatePositionId(masterId, positionId int) error
 	UpdateBio(masterId int, bio string) error
+	GetMasterEmail(masterId int) (string, error)
 }
 
 type Favour interface {

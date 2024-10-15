@@ -72,3 +72,16 @@ func (repo *MasterRepository) UpdateBio(masterId int, bio string) error {
 	}
 	return nil
 }
+
+func (repo *MasterRepository) GetMasterEmail(masterId int) (string, error) {
+	var email string
+	query := "SELECT email FROM users WHERE id=(SELECT user_id FROM masters WHERE id=$1)"
+	row := repo.db.QueryRow(query, masterId)
+	if err := row.Scan(&email); err != nil {
+		if err == sql.ErrNoRows {
+			return "", entity.ErrMasterNotFound
+		}
+		return "", fmt.Errorf("failed to get email of master wih id %d: %w", masterId, err)
+	}
+	return email, nil
+}
