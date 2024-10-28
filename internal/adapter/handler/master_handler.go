@@ -38,3 +38,26 @@ func (h *Handler) GetMasterById(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, master)
 }
+
+func (h *Handler) ReplyToAppointment(c *gin.Context) {
+	var input entity.AppointmentReply
+	if err := c.BindJSON(&input); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	id, flag := h.GetUserId(c)
+	if flag != true {
+		return
+	}
+
+	if err := h.service.Master.ReplyToAppointment(&input, id); err != nil {
+		if errors.Is(err, entity.ErrInvalidAppointmentInput) {
+			newErrorResponse(c, http.StatusBadRequest, err.Error())
+		} else if errors.Is(err, entity.ErrAppointmentNotFound) {
+			newErrorResponse(c, http.StatusNotFound, err.Error())
+		}
+		return
+	}
+	c.JSON(http.StatusOK, "updated")
+}

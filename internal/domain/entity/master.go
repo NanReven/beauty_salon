@@ -33,3 +33,8 @@ type MasterUpdate struct {
 	PositionId int    `json:"position_id"`
 	Bio        string `json:"bio"`
 }
+
+type AppointmentReply struct {
+	AppointmentId int `json:"appointment_id"`
+	Status        string
+}

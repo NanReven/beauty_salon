@@ -25,6 +25,8 @@ type Master interface {
 	UpdatePositionId(masterId, positionId int) error
 	UpdateBio(masterId int, bio string) error
 	GetMasterEmail(masterId int) (string, error)
+	ReplyToAppointment(input *entity.AppointmentReply) error
+	GetMasterAppointment(masterId int, appointmentId int) error
 }
 
 type Favour interface {

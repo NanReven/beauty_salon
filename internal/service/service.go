@@ -15,6 +15,7 @@ type Appointment interface {
 type Master interface {
 	GetAllMasters() ([]entity.MasterResponse, error)
 	GetMasterById(id int) (entity.MasterResponse, error)
+	ReplyToAppointment(input *entity.AppointmentReply, masterId int) error
 }
 
 type Favour interface {

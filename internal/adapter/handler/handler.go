@@ -27,6 +27,7 @@ func (h *Handler) InitRouter() *gin.Engine {
 	{
 		masters := api.Group("/masters")
 		{
+			masters.POST("", h.CheckMasterRole, h.ReplyToAppointment)
 			masters.GET("", h.GetAllMasters)
 			masters.GET("/:id", h.GetMasterById)
 		}

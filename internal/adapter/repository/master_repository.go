@@ -49,6 +49,18 @@ func (repo *MasterRepository) GetMasterName(userId int) (string, error) {
 	return masterName, nil
 }
 
+func (repo *MasterRepository) GetMasterAppointment(masterId int, appointmentId int) error {
+	var id int
+	query := "SELECT id FROM appointments WHERE masterId=$1 AND id=$2"
+	if err := repo.db.Get(&id, query, masterId, appointmentId); err != nil {
+		if err == sql.ErrNoRows {
+			return entity.ErrAppointmentNotFound
+		}
+		return err
+	}
+	return nil
+}
+
 func (repo *MasterRepository) UpdateUserId(masterId, userId int, slugified string) error {
 	query := "UPDATE masters SET user_id=$1, slug=$2 WHERE id=$3"
 	if _, err := repo.db.Exec(query, userId, slugified, masterId); err != nil {
@@ -84,4 +96,12 @@ func (repo *MasterRepository) GetMasterEmail(masterId int) (string, error) {
 		return "", fmt.Errorf("failed to get email of master wih id %d: %w", masterId, err)
 	}
 	return email, nil
+}
+
+func (repo *MasterRepository) ReplyToAppointment(input *entity.AppointmentReply) error {
+	query := "UPDATE appointments SET status=$1 WHERE id=$2"
+	if _, err := repo.db.Exec(query, input.Status, input.AppointmentId); err != nil {
+		return err
+	}
+	return nil
 }

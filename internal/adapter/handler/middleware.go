@@ -73,3 +73,11 @@ func (h *Handler) CheckAdminRole(c *gin.Context) {
 		return
 	}
 }
+
+func (h *Handler) CheckMasterRole(c *gin.Context) {
+	role, err := h.GetUserRole(c)
+	if err != nil || role != "master" {
+		newErrorResponse(c, http.StatusForbidden, "only for masters")
+		return
+	}
+}
